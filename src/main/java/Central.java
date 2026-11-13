@@ -15,8 +15,9 @@ public class Central {
         return instancia;
     }
 
-    public Pedido registrarPedido(String cliente, String origem, String destino, double peso, double distancia) {
+    public Pedido registrarPedido(String cliente, String origem, String destino, double peso, double distancia, EntregaStrategy modalidade) {
         Pedido pedido = new Pedido(pedidos.size() + 1, cliente, origem, destino, peso, distancia);
+        pedido.setModalidadeEntrega(modalidade);
         pedidos.add(pedido);
         return pedido;
     }
@@ -30,17 +31,21 @@ public class Central {
         return null;
     }
 
-    public boolean selecionarModalidade(int id, EntregaStrategy modalidade) {
+    public EntregaStrategy selecionarModalidadeEntrega(int id) {
+        Pedido pedido = recuperarPedido(id);
+        if (pedido == null) {
+            return null;
+        }
+        return pedido.getModalidadeEntrega();
+    }
+
+    public boolean alterarModalidadeEntrega(int id, EntregaStrategy modalidade) {
         Pedido pedido = recuperarPedido(id);
         if (modalidade == null || pedido == null || pedido.isDespachado()) {
             return false;
         }
         pedido.setModalidadeEntrega(modalidade);
         return true;
-    }
-
-    public boolean alterarModalidadeEntrega(int id, EntregaStrategy modalidade) {
-        return selecionarModalidade(id, modalidade);
     }
 
     public String solicitarEntrega(int id) {
